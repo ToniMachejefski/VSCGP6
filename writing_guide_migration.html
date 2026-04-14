@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Writing Guide — Why People Leave Their Home Country</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --green:#1A6B3C; --green-dark:#0F4020; --green-mid:#3DAB6B; --green-light:#D4EDE1; --green-pale:#EEF8F2;
+  --gold:#C8860A; --gold-light:#FDF3DC; --gold-border:#E8C97A;
+  --blue:#1F5C8B; --blue-light:#D6E8F5;
+  --red:#C0392B; --red-light:#FDECEA;
+  --bg:#F0F5F2; --card:#FFFFFF; --text:#111827; --muted:#6B7280; --border:#D5E4DC;
+  --shadow:0 1px 8px rgba(10,40,20,.08); --shadow-md:0 4px 20px rgba(10,40,20,.12); --shadow-lg:0 12px 40px rgba(10,40,20,.16);
+  --radius:18px; --radius-sm:12px; --radius-xs:8px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+
+/* ── STICKY HEADER ── */
+.site-header{
+  position:sticky;top:0;z-index:200;
+  background:var(--green-dark);
+  padding:0 24px;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  box-shadow:0 2px 16px rgba(0,0,0,.25);
+  min-height:58px;
+}
+.header-left{display:flex;align-items:center;gap:12px;}
+.header-title{font-family:'Fraunces',serif;font-weight:900;font-size:1.05rem;color:white;line-height:1.2;}
+.header-title span{color:#6EE7A0;font-style:italic;}
+.header-badge{background:rgba(255,255,255,.12);border-radius:100px;padding:3px 10px;font-size:.72rem;font-weight:600;color:rgba(255,255,255,.7);}
+
+/* ── PROGRESS BAR ── */
+.progress-wrap{flex:1;max-width:340px;}
+.progress-label{font-size:.72rem;font-weight:600;color:rgba(255,255,255,.6);margin-bottom:5px;display:flex;justify-content:space-between;}
+.progress-track{height:7px;background:rgba(255,255,255,.15);border-radius:100px;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,#6EE7A0,#34D399);border-radius:100px;transition:width .5s cubic-bezier(.4,0,.2,1);}
+
+/* ── FLOATING RESEARCH HUB BUTTON ── */
+.hub-float{
+  position:fixed;bottom:24px;right:24px;z-index:300;
+  background:var(--blue);color:white;
+  border-radius:100px;padding:12px 20px;
+  font-family:'DM Sans',sans-serif;font-weight:700;font-size:.85rem;
+  text-decoration:none;display:flex;align-items:center;gap:8px;
+  box-shadow:0 4px 20px rgba(31,92,139,.45);
+  transition:all .22s;border:none;cursor:pointer;
+}
+.hub-float:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(31,92,139,.5);}
+.hub-float .hub-icon{font-size:1.1rem;}
+
+/* ── MAIN ── */
+main{max-width:860px;margin:0 auto;padding:32px 20px 120px;}
+
+/* ── COUNTRY SELECTOR ── */
+.country-selector-card{
+  background:var(--card);border-radius:var(--radius);
+  padding:28px 32px;margin-bottom:28px;
+  box-shadow:var(--shadow-md);
+  border:2px solid var(--border);
+  animation:slideDown .4s ease;
+}
+@keyframes slideDown{from{opacity:0;transform:translateY(-12px);}to{opacity:1;transform:translateY(0);}}
+.country-selector-title{font-family:'Fraunces',serif;font-weight:900;font-size:1.3rem;color:var(--green-dark);margin-bottom:6px;}
+.country-selector-sub{font-size:.9rem;color:var(--muted);margin-bottom:20px;}
+.country-btns{display:flex;flex-wrap:wrap;gap:10px;}
+.country-btn{
+  padding:10px 22px;border-radius:100px;border:2px solid var(--border);
+  background:white;font-family:'DM Sans',sans-serif;font-weight:600;font-size:.9rem;
+  color:var(--muted);cursor:pointer;transition:all .18s;display:flex;align-items:center;gap:7px;
+}
+.country-btn:hover{border-color:var(--green);color:var(--green);background:var(--green-pale);}
+.country-btn.active{border-color:var(--green);background:var(--green);color:white;box-shadow:0 3px 12px rgba(26,107,60,.3);}
+
+/* ── SECTION CARDS ── */
+.sections-list{display:flex;flex-direction:column;gap:14px;}
+.section-card{
+  background:var(--card);border-radius:var(--radius);
+  border:2px solid var(--border);
+  box-shadow:var(--shadow);
+  overflow:hidden;transition:box-shadow .2s,border-color .2s;
+}
+.section-card:hover{box-shadow:var(--shadow-md);}
+.section-card.complete{border-color:var(--green);}
+.section-card.complete .section-header{background:linear-gradient(135deg,#0A2814,var(--green));}
+
+.section-header{
+  display:flex;align-items:center;gap:14px;
+  padding:16px 22px;cursor:pointer;
+  background:linear-gradient(135deg,var(--green-dark),var(--green));
+  color:white;transition:background .2s;user-select:none;
+}
+.section-header:hover{filter:brightness(1.07);}
+.section-num{
+  width:36px;height:36px;border-radius:50%;
+  background:rgba(255,255,255,.2);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Fraunces',serif;font-weight:900;font-size:1rem;flex-shrink:0;
+}
+.section-header-text{flex:1;}
+.section-header-title{font-family:'Fraunces',serif;font-weight:700;font-size:1rem;line-height:1.2;}
+.section-header-meta{font-size:.75rem;opacity:.7;margin-top:2px;font-weight:500;}
+.section-header-right{display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.section-status{font-size:.75rem;font-weight:700;padding:3px 10px;border-radius:100px;background:rgba(255,255,255,.18);}
+.section-chevron{font-size:.9rem;opacity:.7;transition:transform .25s;}
+.section-card.open .section-chevron{transform:rotate(180deg);}
+
+.section-body{display:none;padding:24px 24px 20px;border-top:2px solid var(--border);}
+.section-card.open .section-body{display:block;animation:fadeIn .25s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+/* Instructions */
+.instructions-block{margin-bottom:18px;}
+.block-label{
+  font-family:'DM Sans',sans-serif;font-weight:700;font-size:.72rem;
+  letter-spacing:1px;text-transform:uppercase;
+  color:var(--green);margin-bottom:8px;display:flex;align-items:center;gap:6px;
+}
+.instructions-text{font-size:.9rem;color:#374151;line-height:1.65;}
+.instructions-text .tag{
+  display:inline-block;background:var(--green-light);color:var(--green);
+  font-weight:700;font-size:.78rem;padding:1px 8px;border-radius:100px;margin:0 2px;
+}
+
+/* PEE explainer */
+.pee-box{
+  background:var(--green-pale);border-left:4px solid var(--green-mid);
+  border-radius:0 var(--radius-xs) var(--radius-xs) 0;
+  padding:12px 14px;margin-top:12px;
+}
+.pee-row{display:flex;gap:10px;margin-bottom:6px;align-items:flex-start;font-size:.85rem;}
+.pee-row:last-child{margin-bottom:0;}
+.pee-letter{font-family:'Fraunces',serif;font-weight:900;font-size:1rem;color:var(--green);width:20px;flex-shrink:0;}
+
+/* Starters toggle */
+.starters-toggle{
+  display:flex;align-items:center;gap:8px;width:100%;
+  background:var(--gold-light);border:1.5px solid var(--gold-border);
+  border-radius:var(--radius-xs);padding:10px 14px;
+  font-family:'DM Sans',sans-serif;font-weight:700;font-size:.82rem;color:var(--gold);
+  cursor:pointer;margin-bottom:10px;transition:all .18s;text-align:left;
+}
+.starters-toggle:hover{background:#FBE9B8;}
+.starters-toggle .toggle-arrow{margin-left:auto;transition:transform .22s;font-size:.8rem;}
+.starters-toggle.open .toggle-arrow{transform:rotate(180deg);}
+.starters-list{display:none;margin-bottom:16px;}
+.starters-list.open{display:block;}
+.starter-item{
+  background:white;border:1.5px solid var(--gold-border);
+  border-radius:var(--radius-xs);padding:11px 14px;
+  font-size:.87rem;color:#374151;margin-bottom:8px;line-height:1.5;
+  cursor:pointer;transition:all .15s;
+}
+.starter-item:hover{border-color:var(--gold);background:var(--gold-light);}
+.starter-item .copy-hint{font-size:.72rem;color:var(--gold);font-weight:700;margin-top:4px;opacity:0;transition:opacity .15s;}
+.starter-item:hover .copy-hint{opacity:1;}
+
+/* Writing area */
+.writing-area-wrap{margin-bottom:18px;}
+.writing-area-label{font-family:'DM Sans',sans-serif;font-weight:700;font-size:.72rem;letter-spacing:1px;text-transform:uppercase;color:var(--green);margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;}
+.writing-area-label .word-counter{font-size:.75rem;color:var(--muted);font-weight:500;text-transform:none;letter-spacing:0;}
+.writing-area{
+  width:100%;min-height:120px;padding:14px 16px;
+  border:2px solid var(--border);border-radius:var(--radius-xs);
+  font-family:'DM Sans',sans-serif;font-size:.9rem;color:var(--text);
+  line-height:1.65;resize:vertical;background:white;transition:border-color .18s;
+}
+.writing-area:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px rgba(26,107,60,.1);}
+.copy-btn{
+  display:inline-flex;align-items:center;gap:6px;margin-top:8px;
+  background:white;border:2px solid var(--border);border-radius:100px;
+  padding:6px 14px;font-family:'DM Sans',sans-serif;font-weight:600;font-size:.78rem;
+  color:var(--muted);cursor:pointer;transition:all .18s;
+}
+.copy-btn:hover{border-color:var(--green);color:var(--green);}
+.copy-btn.copied{border-color:var(--green);color:var(--green);background:var(--green-light);}
+
+/* Self check */
+.selfcheck-wrap{background:#F5FAF7;border:2px solid #C9E0D4;border-radius:var(--radius-xs);padding:16px 18px;margin-bottom:18px;}
+.selfcheck-label{font-family:'DM Sans',sans-serif;font-weight:700;font-size:.72rem;letter-spacing:1px;text-transform:uppercase;color:var(--green);margin-bottom:12px;display:flex;align-items:center;gap:6px;}
+.check-item{display:flex;align-items:flex-start;gap:10px;margin-bottom:9px;cursor:pointer;}
+.check-item:last-child{margin-bottom:0;}
+.check-box{
+  width:20px;height:20px;border-radius:5px;border:2px solid #A0C4B5;
+  background:white;flex-shrink:0;margin-top:1px;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .15s;font-size:.75rem;
+}
+.check-item.checked .check-box{background:var(--green);border-color:var(--green);color:white;}
+.check-text{font-size:.875rem;color:#374151;line-height:1.45;transition:color .15s;}
+.check-item.checked .check-text{color:var(--muted);text-decoration:line-through;}
+
+/* Complete button */
+.complete-btn{
+  width:100%;padding:13px 20px;border-radius:var(--radius-xs);border:none;
+  font-family:'DM Sans',sans-serif;font-weight:700;font-size:.92rem;
+  cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.complete-btn.not-done{background:var(--green-pale);color:var(--green);border:2px solid var(--green-light);}
+.complete-btn.not-done:hover{background:var(--green);color:white;}
+.complete-btn.done{background:var(--green-light);color:var(--green);border:2px solid #A0C4B5;cursor:default;}
+.complete-btn.undo{background:white;color:var(--muted);border:2px solid var(--border);margin-top:8px;font-size:.8rem;padding:8px;}
+.complete-btn.undo:hover{border-color:var(--red);color:var(--red);}
+
+/* Citation reminder */
+.cite-reminder{
+  display:flex;gap:10px;align-items:flex-start;
+  background:var(--green-pale);border-left:4px solid var(--green-mid);
+  border-radius:0 var(--radius-xs) var(--radius-xs) 0;
+  padding:10px 14px;margin-bottom:16px;font-size:.83rem;color:#374151;line-height:1.5;
+}
+.cite-reminder .cite-icon{font-size:1rem;flex-shrink:0;margin-top:1px;}
+
+/* Alt section headers */
+.section-card.alt .section-header{background:linear-gradient(135deg,#3D2E0A,var(--gold));}
+.section-card.alt2 .section-header{background:linear-gradient(135deg,#1A1A2E,#3B4A8A);}
+
+/* Celebration */
+.celebrate-banner{
+  display:none;background:linear-gradient(135deg,var(--green),#2ECC71);
+  border-radius:var(--radius);padding:24px 28px;text-align:center;
+  color:white;margin-bottom:24px;animation:popIn .4s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes popIn{from{opacity:0;transform:scale(.9);}to{opacity:1;transform:scale(1);}}
+.celebrate-banner.show{display:block;}
+.celebrate-title{font-family:'Fraunces',serif;font-weight:900;font-size:1.6rem;margin-bottom:6px;}
+.celebrate-sub{font-size:.95rem;opacity:.9;}
+
+@media(max-width:600px){
+  main{padding:20px 14px 100px;}
+  .country-selector-card{padding:20px 18px;}
+  .section-header{padding:14px 16px;}
+  .section-body{padding:18px 16px 16px;}
+  .progress-wrap{display:none;}
+  .hub-float{padding:10px 16px;font-size:.8rem;bottom:16px;right:16px;}
+}
+</style>
+</head>
+<body>
+
+<!-- FLOATING RESEARCH HUB -->
+<a class="hub-float" href="https://tonimachejefski.github.io/VSCGP6/" target="_blank" rel="noopener">
+  <span class="hub-icon">🔗</span> Research Hub
+</a>
+
+<!-- STICKY HEADER -->
+<div class="site-header">
+  <div class="header-left">
+    <div class="header-title">Writing Guide — <span>Why People Leave</span></div>
+    <div class="header-badge">Grade 6</div>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-label">
+      <span>Your progress</span>
+      <span id="progress-text">0 of 9 complete</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+  </div>
+</div>
+
+<main>
+
+  <div class="celebrate-banner" id="celebrate">
+    <div class="celebrate-title">🎉 All sections complete!</div>
+    <div class="celebrate-sub">Great work — make sure everything is copied into your template before you submit.</div>
+  </div>
+
+  <!-- COUNTRY SELECTOR -->
+  <div class="country-selector-card">
+    <div class="country-selector-title">Which country are you researching?</div>
+    <div class="country-selector-sub">Choose your country below — your sentence starters will update to match.</div>
+    <div class="country-btns">
+      <button class="country-btn" data-country="Palestine" onclick="selectCountry(this)">🌿 Palestine</button>
+      <button class="country-btn" data-country="Syria" onclick="selectCountry(this)">🕊️ Syria</button>
+      <button class="country-btn" data-country="Ukraine" onclick="selectCountry(this)">🌻 Ukraine</button>
+      <button class="country-btn" data-country="the Philippines" onclick="selectCountry(this)">🌺 The Philippines</button>
+    </div>
+  </div>
+
+  <div class="sections-list" id="sections-list"></div>
+
+</main>
+
+<script>
+const SECTIONS = [
+  {
+    id:'s1', num:1, title:'Research Question', meta:'This is your title', type:'normal',
+    wc:null,
+    instructions:`Your research question is the <strong>title</strong> of your report. It must be about <span class="tag">ONE country</span> and focus on <span class="tag">ONE specific reason</span> why people are leaving. Write it as a question — it should end with a <strong>?</strong>`,
+    starters:[
+      'Why are people leaving [COUNTRY] and where are they going?',
+      'What are the main reasons [people / families] are forced to leave [COUNTRY]?',
+      'How has [conflict / poverty / disaster] in [COUNTRY] caused people to migrate to other countries?'
+    ],
+    prompt:'Draft your research question here:',
+    checks:[
+      'My question ends with a question mark (?)',
+      'My question is about ONE country only',
+      'My question focuses on ONE specific reason people are leaving',
+      'My question is not too broad — I can answer it in 350–450 words'
+    ],
+    citation:false
+  },
+  {
+    id:'s2', num:2, title:'Introduction', meta:'60–70 words', type:'normal',
+    wc:60, wcMax:70,
+    instructions:`Introduce your chosen country and <strong>explain the issue</strong> your report is about. Tell the reader what they are going to find out. Finish with a sentence that says what you will discuss.`,
+    starters:[
+      '[COUNTRY] is a country in [region]. In recent years, many people have been forced to leave because…',
+      'Every year, thousands of people leave [COUNTRY] to find safety / a better life. This report will explore why…',
+      'Migration is a growing global issue. In [COUNTRY], people are leaving their homes because of…'
+    ],
+    prompt:'Draft your introduction here:',
+    checks:[
+      'I have introduced the country and said where it is',
+      'I have explained what the main issue or problem is',
+      'I have told the reader what my report will discuss',
+      'I have added in-text citations for any facts I used'
+    ],
+    citation:true
+  },
+  {
+    id:'s3', num:3, title:'Causes of the Issue', meta:'90–100 words', type:'normal',
+    wc:90, wcMax:100,
+    instructions:`Explain <span class="tag">1–2 reasons</span> WHY people are leaving this country. Use the <strong>PEE structure</strong> for each cause and add in-text citations after any evidence.`,
+    pee:true,
+    starters:[
+      'One reason people are leaving [COUNTRY] is… This is shown by… This means that…',
+      'A key cause of migration from [COUNTRY] is… For example,… This suggests that…',
+      'The [conflict / economic crisis / natural disaster] in [COUNTRY] has caused… According to [source],… As a result,…'
+    ],
+    prompt:'Draft your causes paragraph here:',
+    checks:[
+      'I have explained at least one cause clearly',
+      'I have used evidence from a source to support my point',
+      'I have explained what the evidence means (the E in PEE)',
+      'I have added in-text citations after my evidence'
+    ],
+    citation:true
+  },
+  {
+    id:'s4', num:4, title:'Consequences of the Issue', meta:'90–100 words', type:'normal',
+    wc:90, wcMax:100,
+    instructions:`Explain <span class="tag">1–2 effects</span> of people leaving this country. Think about the impact on the <strong>people who leave</strong> AND on the <strong>countries they move to</strong>. Use PEE structure and add in-text citations.`,
+    pee:true,
+    starters:[
+      'One consequence of people leaving [COUNTRY] is… Evidence for this can be seen in… This means that…',
+      'This issue has had a significant impact on [migrants / host countries / families]. For instance,… As a result,…',
+      'When people flee [COUNTRY], they often face… A report by [source] found that… This shows that…'
+    ],
+    prompt:'Draft your consequences paragraph here:',
+    checks:[
+      'I have explained at least one consequence clearly',
+      'I have used evidence from a source to support my point',
+      'I have explained what the evidence means (the E in PEE)',
+      'I have added in-text citations after my evidence'
+    ],
+    citation:true
+  },
+  {
+    id:'s5', num:5, title:'Perspectives on the Issue', meta:'70–80 words', type:'normal',
+    wc:70, wcMax:80,
+    instructions:`Explain how <span class="tag">different people or groups</span> view this issue. Not everyone agrees about migration. Try to include <strong>at least 2 different perspectives</strong> and support them with evidence.`,
+    starters:[
+      'Some people believe that [country / group] should do more to help migrants because… However, others argue that…',
+      'From the perspective of [migrants / host governments / local communities],… On the other hand,…',
+      'Not everyone agrees about this issue. While [source/group] argues that migrants should be welcomed… another viewpoint is…'
+    ],
+    prompt:'Draft your perspectives paragraph here:',
+    checks:[
+      'I have included at least two different perspectives',
+      'The perspectives are from different groups or sources',
+      'I have used evidence or named sources to support the perspectives',
+      'I have added in-text citations'
+    ],
+    citation:true
+  },
+  {
+    id:'s6', num:6, title:'Conclusion', meta:'50–60 words', type:'normal',
+    wc:50, wcMax:60,
+    instructions:`Summarise the <strong>main points</strong> of your report. Do <span class="tag">NOT</span> introduce any new information. You can share your opinion on whether you think the situation in this country will improve in the future.`,
+    starters:[
+      'In conclusion, this report has shown that people are leaving [COUNTRY] because of… The main consequences are…',
+      'To summarise, the situation in [COUNTRY] has led to… It is clear that…',
+      'Overall, this is an important issue because… In the future, I believe that…'
+    ],
+    prompt:'Draft your conclusion here:',
+    checks:[
+      'I have summarised the main causes from my report',
+      'I have summarised the main consequences from my report',
+      'I have NOT introduced any new information',
+      'I have given my opinion on whether this situation will improve'
+    ],
+    citation:false
+  },
+  {
+    id:'s7', num:7, title:'Bibliography', meta:'Aim for at least 3 sources', type:'alt',
+    wc:null,
+    instructions:`List <strong>ALL sources</strong> you used in your report. Every source you cited in-text must appear here. Use <span class="tag">APA7 format</span>. Check the Research Hub for ready-made citations for your country's sources.`,
+    starters:[
+      'Author/Organisation. (Year). <em>Title of article.</em> Website Name. URL',
+      'UNHCR. (n.d.). <em>Syria emergency.</em> UNHCR. https://www.unhcr.org/emergencies/syria-emergency',
+      'BBC News. (n.d.). <em>Ukraine: What is happening and why did Russia invade?</em> BBC News. [URL]'
+    ],
+    startersLabel:'APA7 examples',
+    prompt:'Type or paste your bibliography here (one source per line):',
+    checks:[
+      'I have listed every source I cited in my report',
+      'I have at least 3 sources from different types',
+      'Each citation follows APA7 format (Author, Year, Title, URL)',
+      'I have checked my in-text citations match my bibliography entries'
+    ],
+    citation:false
+  },
+  {
+    id:'s8', num:8, title:'CRAAP Test', meta:'Source Evaluation', type:'alt',
+    wc:null,
+    instructions:`Choose <span class="tag">ONE source</span> from your bibliography. Complete the CRAAP test for it in your template. Rate each of the 5 elements <strong>out of 5</strong> and write a reason for each rating.`,
+    starters:[
+      '<strong>Currency:</strong> Think about your topic — does it matter how recent the information is? For an ongoing conflict like Palestine or Ukraine, a 2020 article might already be out of date. For a longer-running issue, an older source might still be reliable.',
+      '<strong>Relevance:</strong> Don\'t just check the title — read a few paragraphs. Does the article actually discuss YOUR specific issue, or is it too general? A source about Syrian food shortages isn\'t very relevant if your question is about where refugees are going.',
+      '<strong>Authority:</strong> Look for clues: is the author a journalist, aid organisation, or government agency? Is the website a news outlet, a UN agency, or someone\'s personal blog? UN agencies like UNHCR and UNICEF tend to have high authority on refugee issues.',
+      '<strong>Accuracy:</strong> A good sign: the article references other sources, reports, or data. A warning sign: it makes big claims with no evidence, or you can\'t find the same information anywhere else.',
+      '<strong>Purpose:</strong> Ask yourself: does this source have anything to gain? A government\'s statement about refugees might want to justify a policy. An aid organisation\'s report wants to raise awareness and funding. Neither is automatically wrong — but you should be aware of it.'
+    ],
+    startersLabel:'Advice for each CRAAP element',
+    prompt:'Draft your overall verdict on your chosen source here:',
+    checks:[
+      'I have completed all 5 CRAAP elements in my template',
+      'I have given a rating AND a written reason for each element',
+      'I have thought about whether this source could be biased',
+      'I have written my overall verdict on the source'
+    ],
+    citation:false
+  },
+  {
+    id:'s9', num:9, title:'Collaboration Reflection', meta:'Task 2 — Team Project', type:'alt2',
+    wc:null,
+    instructions:`This section is about your <strong>teamwork</strong> in Task 2 (the collaboration project). Rate yourself on each statement using 😕 / 🙂 / 😄 and write <strong>one sentence of evidence</strong> for each rating in your template.`,
+    starters:[
+      'I contributed useful ideas to my team. For example, I suggested…',
+      'I completed my fair share of the work. My responsibilities included…',
+      'I listened to my teammates. When we disagreed, I…',
+      'Our team assigned clear roles. My role was to… because…',
+      'I helped develop the course of action by…'
+    ],
+    startersLabel:'Evidence sentence starters',
+    prompt:'What are you most proud of in your team\'s display? Write 1–2 sentences here:',
+    checks:[
+      'I have rated myself on all 5 statements in my template',
+      'I have written one sentence of evidence for each rating',
+      'I have added a screenshot of our team\'s display',
+      'I have answered the "most proud of" question'
+    ],
+    citation:false
+  }
+];
+
+// ── STATE ────────────────────────────────────────────────────────────────────
+let country = localStorage.getItem('mg_country') || '';
+let completedSections = JSON.parse(localStorage.getItem('mg_complete') || '[]');
+let drafts = JSON.parse(localStorage.getItem('mg_drafts') || '{}');
+let checks = JSON.parse(localStorage.getItem('mg_checks') || '{}');
+
+// ── COUNTRY SELECT ───────────────────────────────────────────────────────────
+function selectCountry(btn) {
+  country = btn.dataset.country;
+  localStorage.setItem('mg_country', country);
+  document.querySelectorAll('.country-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  updateAllStarters();
+}
+
+function updateAllStarters() {
+  document.querySelectorAll('.starter-item').forEach(el => {
+    const raw = el.dataset.raw || '';
+    el.querySelector('.starter-text').innerHTML = raw.replaceAll('[COUNTRY]', country || '[COUNTRY]');
+  });
+}
+
+// ── BUILD SECTIONS ───────────────────────────────────────────────────────────
+function buildSections() {
+  const list = document.getElementById('sections-list');
+  list.innerHTML = SECTIONS.map(sec => buildSectionHTML(sec)).join('');
+  SECTIONS.forEach(sec => {
+    const ta = document.getElementById('ta-' + sec.id);
+    if (ta && drafts[sec.id]) ta.value = drafts[sec.id];
+    if (ta) {
+      updateWordCount(ta, sec.id);
+      ta.addEventListener('input', () => {
+        drafts[sec.id] = ta.value;
+        localStorage.setItem('mg_drafts', JSON.stringify(drafts));
+        updateWordCount(ta, sec.id);
+      });
+    }
+    if (checks[sec.id]) {
+      checks[sec.id].forEach((checked, i) => {
+        if (checked) {
+          const item = document.querySelector(`#checks-${sec.id} .check-item[data-i="${i}"]`);
+          if (item) item.classList.add('checked');
+        }
+      });
+    }
+    if (completedSections.includes(sec.id)) {
+      const card = document.getElementById('card-' + sec.id);
+      if (card) { card.classList.add('complete'); setCompleteUI(sec.id, true); }
+    }
+  });
+  updateProgress();
+  if (country) {
+    document.querySelectorAll('.country-btn').forEach(b => { if (b.dataset.country === country) b.classList.add('active'); });
+    updateAllStarters();
+  }
+}
+
+function buildSectionHTML(sec) {
+  const isAlt = sec.type === 'alt';
+  const isAlt2 = sec.type === 'alt2';
+  const statusText = completedSections.includes(sec.id) ? '✓ Complete' : 'Not started';
+  const altClass = isAlt ? ' alt' : isAlt2 ? ' alt2' : '';
+
+  let instrHTML = `<div class="instructions-block"><div class="block-label">📋 What to do</div><div class="instructions-text">${sec.instructions}</div>`;
+  if (sec.pee) {
+    instrHTML += `<div class="pee-box">
+      <div class="pee-row"><span class="pee-letter">P</span><span><strong>Point</strong> — State your cause or consequence clearly.</span></div>
+      <div class="pee-row"><span class="pee-letter">E</span><span><strong>Evidence</strong> — Use a fact or quote from a source (with citation).</span></div>
+      <div class="pee-row"><span class="pee-letter">E</span><span><strong>Explanation</strong> — Explain what the evidence means and why it matters.</span></div>
+    </div>`;
+  }
+  instrHTML += `</div>`;
+
+  const citeHTML = sec.citation ? `<div class="cite-reminder"><span class="cite-icon">📌</span><span>Remember to add an <strong>in-text citation</strong> after any fact or evidence you use. Example: <em>(UNHCR, n.d.)</em>. Check the Research Hub for your source's citation.</span></div>` : '';
+
+  const startersLabel = sec.startersLabel || 'Sentence starters — choose one';
+  const startersHTML = `
+    <button class="starters-toggle" onclick="toggleStarters('${sec.id}')">
+      <span>✏️ ${startersLabel}</span>
+      <span class="toggle-arrow">▼</span>
+    </button>
+    <div class="starters-list" id="starters-${sec.id}">
+      ${sec.starters.map(s => `
+        <div class="starter-item" onclick="copyStarter(this, '${sec.id}')" data-raw="${s.replaceAll('"', "'")}">
+          <div class="starter-text">${s.replaceAll('[COUNTRY]', country || '[COUNTRY]')}</div>
+          <div class="copy-hint">Click to copy →</div>
+        </div>`).join('')}
+    </div>`;
+
+  const wcLabel = sec.wc ? `<span class="word-counter" id="wc-${sec.id}">0 / ${sec.wc}–${sec.wcMax} words</span>` : '';
+  const writingHTML = `
+    <div class="writing-area-wrap">
+      <div class="writing-area-label"><span>✍️ ${sec.prompt}</span>${wcLabel}</div>
+      <textarea class="writing-area" id="ta-${sec.id}" placeholder="Type your draft here… you can copy and paste it into your template when you're ready." rows="5"></textarea>
+      <button class="copy-btn" id="copybtn-${sec.id}" onclick="copyDraft('${sec.id}')">📋 Copy to clipboard</button>
+    </div>`;
+
+  const checksHTML = `
+    <div class="selfcheck-wrap">
+      <div class="selfcheck-label">✅ Self-check before moving on</div>
+      <div id="checks-${sec.id}">
+        ${sec.checks.map((c, i) => `
+          <div class="check-item" data-i="${i}" onclick="toggleCheck('${sec.id}', ${i}, this)">
+            <div class="check-box"></div>
+            <div class="check-text">${c}</div>
+          </div>`).join('')}
+      </div>
+    </div>`;
+
+  const completeBtns = `
+    <button class="complete-btn not-done" id="compbtn-${sec.id}" onclick="markComplete('${sec.id}')">Mark section as complete ✓</button>
+    <button class="complete-btn undo" id="undobtn-${sec.id}" style="display:none;" onclick="markIncomplete('${sec.id}')">↩ Mark as incomplete</button>`;
+
+  return `
+    <div class="section-card${altClass}" id="card-${sec.id}">
+      <div class="section-header" onclick="toggleSection('${sec.id}')">
+        <div class="section-num">${sec.num}</div>
+        <div class="section-header-text">
+          <div class="section-header-title">${sec.title}</div>
+          <div class="section-header-meta">${sec.meta}</div>
+        </div>
+        <div class="section-header-right">
+          <span class="section-status" id="status-${sec.id}">${statusText}</span>
+          <span class="section-chevron">▼</span>
+        </div>
+      </div>
+      <div class="section-body">
+        ${instrHTML}${citeHTML}${startersHTML}${writingHTML}${checksHTML}${completeBtns}
+      </div>
+    </div>`;
+}
+
+// ── INTERACTIONS ─────────────────────────────────────────────────────────────
+function toggleSection(id) { document.getElementById('card-'+id).classList.toggle('open'); }
+
+function toggleStarters(id) {
+  const list = document.getElementById('starters-'+id);
+  const btn = list.previousElementSibling;
+  list.classList.toggle('open');
+  btn.classList.toggle('open');
+}
+
+function copyStarter(el, secId) {
+  const text = el.querySelector('.starter-text').innerText;
+  const ta = document.getElementById('ta-'+secId);
+  if (ta) {
+    ta.value = (ta.value ? ta.value + '\n' : '') + text;
+    drafts[secId] = ta.value;
+    localStorage.setItem('mg_drafts', JSON.stringify(drafts));
+    updateWordCount(ta, secId);
+    ta.focus();
+  }
+  el.style.background = '#FBE9B8';
+  setTimeout(() => el.style.background = '', 400);
+}
+
+function copyDraft(id) {
+  const ta = document.getElementById('ta-'+id);
+  if (!ta || !ta.value.trim()) return;
+  navigator.clipboard.writeText(ta.value).then(() => {
+    const btn = document.getElementById('copybtn-'+id);
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = '📋 Copy to clipboard'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+function toggleCheck(secId, idx, el) {
+  el.classList.toggle('checked');
+  if (!checks[secId]) checks[secId] = [];
+  checks[secId][idx] = el.classList.contains('checked');
+  localStorage.setItem('mg_checks', JSON.stringify(checks));
+}
+
+function updateWordCount(ta, id) {
+  const sec = SECTIONS.find(s => s.id === id);
+  if (!sec || !sec.wc) return;
+  const wc = document.getElementById('wc-'+id);
+  if (!wc) return;
+  const words = ta.value.trim() ? ta.value.trim().split(/\s+/).length : 0;
+  wc.textContent = `${words} / ${sec.wc}–${sec.wcMax} words`;
+  wc.style.color = words >= sec.wc && words <= sec.wcMax ? 'var(--green)' : words > sec.wcMax ? 'var(--red)' : 'var(--muted)';
+}
+
+function markComplete(id) {
+  if (!completedSections.includes(id)) completedSections.push(id);
+  localStorage.setItem('mg_complete', JSON.stringify(completedSections));
+  const card = document.getElementById('card-'+id);
+  card.classList.add('complete');
+  card.classList.remove('open');
+  setCompleteUI(id, true);
+  updateProgress();
+}
+
+function markIncomplete(id) {
+  completedSections = completedSections.filter(s => s !== id);
+  localStorage.setItem('mg_complete', JSON.stringify(completedSections));
+  document.getElementById('card-'+id).classList.remove('complete');
+  setCompleteUI(id, false);
+  updateProgress();
+}
+
+function setCompleteUI(id, done) {
+  const compBtn = document.getElementById('compbtn-'+id);
+  const undoBtn = document.getElementById('undobtn-'+id);
+  const status = document.getElementById('status-'+id);
+  if (done) {
+    if (compBtn) { compBtn.textContent = '✓ Section complete'; compBtn.className = 'complete-btn done'; }
+    if (undoBtn) undoBtn.style.display = 'flex';
+    if (status) status.textContent = '✓ Complete';
+  } else {
+    if (compBtn) { compBtn.textContent = 'Mark section as complete ✓'; compBtn.className = 'complete-btn not-done'; }
+    if (undoBtn) undoBtn.style.display = 'none';
+    if (status) status.textContent = 'Not started';
+  }
+}
+
+function updateProgress() {
+  const total = SECTIONS.length, done = completedSections.length;
+  document.getElementById('progress-fill').style.width = Math.round((done/total)*100) + '%';
+  document.getElementById('progress-text').textContent = `${done} of ${total} complete`;
+  const cel = document.getElementById('celebrate');
+  done === total ? cel.classList.add('show') : cel.classList.remove('show');
+}
+
+buildSections();
+</script>
+</body>
+</html>

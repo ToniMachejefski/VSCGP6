@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Research Sources — Grade 6</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Nunito+Sans:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue:#1F5C8B; --blue-light:#D6E8F5; --green:#1A6B3C; --green-light:#D4EDE1;
+    --gold:#C8860A; --gold-light:#FDF3DC; --red:#C0392B; --red-light:#FDECEA;
+    --correct:#1A6B3C; --correct-light:#D4EDE1; --wrong:#C0392B; --wrong-light:#FDECEA;
+    --bg:#F5F6FA; --card:#FFFFFF; --text:#1A1A2E; --muted:#6B7280; --border:#E5E7EB;
+    --shadow:0 2px 12px rgba(0,0,0,0.08); --shadow-hover:0 8px 32px rgba(0,0,0,0.14);
+    --radius:16px; --radius-sm:10px;
+    --tc:#1F5C8B; --tc-light:#D6E8F5;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Nunito Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.6;}
+
+  header{background:var(--text);color:white;padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,0.2);}
+  .header-logo{font-family:'Nunito',sans-serif;font-weight:800;font-size:1.1rem;letter-spacing:-.5px;}
+  .header-logo span{color:#60A5FA;}
+  .breadcrumb{display:flex;align-items:center;gap:6px;font-size:.82rem;color:rgba(255,255,255,.6);font-family:'Nunito',sans-serif;font-weight:600;}
+  .breadcrumb .crumb{cursor:pointer;transition:color .2s;}
+  .breadcrumb .crumb:hover{color:white;}
+  .breadcrumb .crumb.active{color:white;}
+  .breadcrumb .sep{opacity:.4;}
+
+  main{max-width:980px;margin:0 auto;padding:40px 20px 80px;}
+  .view{display:none;animation:fadeUp .35s ease;}
+  .view.active{display:block;}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+
+  .page-title{font-family:'Nunito',sans-serif;font-weight:900;font-size:clamp(1.6rem,4vw,2.2rem);color:var(--text);margin-bottom:6px;line-height:1.2;}
+  .page-sub{font-size:1rem;color:var(--muted);margin-bottom:36px;font-weight:600;}
+
+  .steps{display:flex;align-items:center;gap:0;margin-bottom:36px;font-family:'Nunito',sans-serif;font-weight:700;font-size:.85rem;}
+  .step{display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:100px;color:var(--muted);background:white;border:2px solid var(--border);}
+  .step.done{background:var(--tc-light);border-color:var(--tc);color:var(--tc);}
+  .step.current{background:var(--tc);border-color:var(--tc);color:white;}
+  .step-num{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.78rem;background:rgba(0,0,0,.12);}
+  .step.current .step-num{background:rgba(255,255,255,.25);}
+  .step.done .step-num{background:var(--tc);color:white;}
+  .step-arrow{width:28px;height:2px;background:var(--border);flex-shrink:0;}
+  .step-arrow.done{background:var(--tc);}
+
+  /* Topic cards */
+  .topic-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;}
+  .topic-card{background:white;border-radius:var(--radius);padding:36px 32px;cursor:pointer;border:3px solid transparent;box-shadow:var(--shadow);transition:all .25s ease;position:relative;overflow:hidden;}
+  .topic-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--tc-light) 0%,transparent 60%);opacity:0;transition:opacity .25s;}
+  .topic-card:hover::before{opacity:1;}
+  .topic-card:hover{border-color:var(--tc);box-shadow:var(--shadow-hover);transform:translateY(-4px);}
+  .tc-icon{font-size:3rem;margin-bottom:16px;display:block;}
+  .tc-label{font-size:.75rem;font-family:'Nunito',sans-serif;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--tc);margin-bottom:8px;}
+  .tc-title{font-family:'Nunito',sans-serif;font-weight:900;font-size:1.4rem;color:var(--text);margin-bottom:12px;line-height:1.2;}
+  .tc-desc{font-size:.9rem;color:var(--muted);line-height:1.5;margin-bottom:20px;}
+  .tc-choices{display:flex;flex-wrap:wrap;gap:6px;}
+  .tc-chip{background:var(--tc-light);color:var(--tc);font-family:'Nunito',sans-serif;font-weight:700;font-size:.78rem;padding:4px 10px;border-radius:100px;border:1.5px solid var(--tc);}
+  .tc-cta{margin-top:20px;display:inline-flex;align-items:center;gap:6px;background:var(--tc);color:white;font-family:'Nunito',sans-serif;font-weight:800;font-size:.88rem;padding:10px 20px;border-radius:100px;transition:all .2s;}
+  .topic-card:hover .tc-cta{background:var(--text);}
+
+  /* Subtopic grid */
+  .subtopic-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;}
+  .subtopic-card{background:white;border-radius:var(--radius);padding:28px 22px;cursor:pointer;border:2px solid var(--border);box-shadow:var(--shadow);transition:all .2s ease;text-align:center;}
+  .subtopic-card:hover{border-color:var(--tc);box-shadow:var(--shadow-hover);transform:translateY(-3px);}
+  .sc-emoji{font-size:2.4rem;margin-bottom:12px;display:block;}
+  .sc-name{font-family:'Nunito',sans-serif;font-weight:800;font-size:1.1rem;color:var(--text);margin-bottom:8px;}
+  .sc-issue{font-size:.8rem;color:var(--muted);line-height:1.4;}
+  .sc-badge{margin-top:14px;display:inline-block;background:var(--tc-light);color:var(--tc);font-family:'Nunito',sans-serif;font-weight:700;font-size:.75rem;padding:3px 10px;border-radius:100px;}
+
+  .back-btn{display:inline-flex;align-items:center;gap:6px;background:white;border:2px solid var(--border);border-radius:100px;padding:8px 18px;font-family:'Nunito',sans-serif;font-weight:700;font-size:.88rem;color:var(--muted);cursor:pointer;transition:all .2s;margin-bottom:28px;}
+  .back-btn:hover{border-color:var(--tc);color:var(--tc);}
+
+  .topic-banner{background:linear-gradient(135deg,var(--tc),color-mix(in srgb,var(--tc) 70%,black));border-radius:var(--radius);padding:28px 32px;color:white;margin-bottom:32px;display:flex;align-items:center;gap:16px;}
+  .tb-emoji{font-size:2.5rem;}
+  .tb-name{font-family:'Nunito',sans-serif;font-weight:900;font-size:1.6rem;}
+  .tb-issue{font-size:.9rem;opacity:.85;margin-top:2px;}
+
+  /* Source cards */
+  .sources-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:20px;margin-bottom:24px;}
+  .source-card{background:white;border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;border:2px solid var(--border);}
+  .source-card-header{background:linear-gradient(135deg,var(--tc),color-mix(in srgb,var(--tc) 75%,#000));padding:18px 20px 16px;color:white;}
+  .source-num{font-family:'Nunito',sans-serif;font-weight:800;font-size:.72rem;letter-spacing:1px;text-transform:uppercase;opacity:.7;margin-bottom:6px;}
+  .source-title{font-family:'Nunito',sans-serif;font-weight:800;font-size:1rem;line-height:1.3;margin-bottom:8px;}
+  .source-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .source-badge{background:rgba(255,255,255,.2);border-radius:100px;padding:3px 10px;font-family:'Nunito',sans-serif;font-weight:700;font-size:.72rem;}
+  .source-card-body{padding:20px;}
+  .source-desc{font-size:.88rem;color:#374151;line-height:1.55;margin-bottom:16px;}
+
+  /* Citation box */
+  .citation-box{background:var(--gold-light);border-left:4px solid var(--gold);border-radius:0 var(--radius-sm) var(--radius-sm) 0;padding:12px 14px;margin-bottom:16px;}
+  .citation-label{font-family:'Nunito',sans-serif;font-weight:800;font-size:.72rem;letter-spacing:.8px;text-transform:uppercase;color:var(--gold);margin-bottom:5px;}
+  .citation-text{font-size:.8rem;color:#5C4A1E;font-family:'Courier New',monospace;line-height:1.5;}
+  .citation-text em{font-style:italic;}
+
+  /* Hints */
+  .hints-label{font-family:'Nunito',sans-serif;font-weight:800;font-size:.78rem;letter-spacing:.8px;text-transform:uppercase;color:var(--tc);margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+  .hint-list{list-style:none;margin-bottom:16px;}
+  .hint-list li{display:flex;align-items:flex-start;gap:8px;font-size:.85rem;color:#374151;padding:7px 0;border-bottom:1px solid var(--border);line-height:1.45;}
+  .hint-list li:last-child{border-bottom:none;}
+  .hint-dot{width:7px;height:7px;border-radius:50%;background:var(--tc);flex-shrink:0;margin-top:5px;}
+
+  /* Open button */
+  .open-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-bottom:20px;background:var(--tc);color:white;font-family:'Nunito',sans-serif;font-weight:800;font-size:.9rem;padding:12px 20px;border-radius:var(--radius-sm);text-decoration:none;transition:all .2s;}
+  .open-btn:hover{opacity:.88;transform:translateY(-1px);}
+
+  /* Quiz */
+  .quiz-section{background:#F8F9FF;border:2px solid var(--border);border-radius:var(--radius-sm);padding:16px;}
+  .quiz-q{font-family:'Nunito',sans-serif;font-weight:800;font-size:.88rem;color:var(--text);margin-bottom:12px;line-height:1.4;}
+  .quiz-q .quiz-icon{font-size:1rem;margin-right:4px;}
+  .quiz-options{display:flex;flex-direction:column;gap:8px;}
+  .quiz-btn{
+    text-align:left;padding:10px 14px;border-radius:var(--radius-sm);border:2px solid var(--border);
+    background:white;font-family:'Nunito',sans-serif;font-weight:700;font-size:.85rem;
+    color:var(--text);cursor:pointer;transition:all .18s;line-height:1.4;
+  }
+  .quiz-btn:hover:not(:disabled){border-color:var(--tc);background:var(--tc-light);color:var(--tc);}
+  .quiz-btn.correct{border-color:var(--correct);background:var(--correct-light);color:var(--correct);cursor:default;}
+  .quiz-btn.wrong{border-color:var(--wrong);background:var(--wrong-light);color:var(--wrong);cursor:default;}
+  .quiz-btn.revealed{border-color:var(--correct);background:var(--correct-light);color:var(--correct);cursor:default;}
+  .quiz-btn:disabled{cursor:default;}
+  .quiz-feedback{margin-top:12px;font-size:.84rem;line-height:1.5;border-radius:var(--radius-sm);padding:10px 14px;display:none;}
+  .quiz-feedback.show{display:block;}
+  .quiz-feedback.correct-fb{background:var(--correct-light);color:#0F4020;border-left:4px solid var(--correct);}
+  .quiz-feedback.wrong-fb{background:var(--wrong-light);color:#7A1A0F;border-left:4px solid var(--wrong);}
+  .quiz-feedback strong{font-family:'Nunito',sans-serif;font-weight:800;}
+  .quiz-reset{margin-top:10px;background:white;border:2px solid var(--border);border-radius:100px;padding:6px 14px;font-family:'Nunito',sans-serif;font-weight:700;font-size:.8rem;color:var(--muted);cursor:pointer;display:none;}
+  .quiz-reset:hover{border-color:var(--tc);color:var(--tc);}
+  .quiz-reset.show{display:inline-flex;}
+
+  /* Reminder box */
+  .reminder-box{background:white;border:2px solid var(--border);border-left:5px solid var(--tc);border-radius:var(--radius);padding:20px 24px;}
+  .reminder-box h3{font-family:'Nunito',sans-serif;font-weight:800;font-size:.95rem;color:var(--tc);margin-bottom:10px;}
+  .reminder-box ul{list-style:none;}
+  .reminder-box ul li{font-size:.875rem;color:var(--muted);padding:5px 0;display:flex;gap:8px;align-items:flex-start;}
+  .reminder-box ul li::before{content:'✓';color:var(--tc);font-weight:800;flex-shrink:0;}
+
+  @media(max-width:600px){
+    main{padding:24px 16px 60px;}
+    .sources-grid{grid-template-columns:1fr;}
+    .topic-grid{grid-template-columns:1fr;}
+    .topic-banner{flex-direction:column;align-items:flex-start;gap:10px;}
+    .steps{font-size:.75rem;}
+    .step{padding:6px 10px;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-logo">Grade 6 <span>Research Hub</span></div>
+  <div class="breadcrumb" id="breadcrumb">
+    <span class="crumb active" onclick="goHome()">Home</span>
+  </div>
+</header>
+
+<main>
+
+  <!-- VIEW 1: HOME -->
+  <div class="view active" id="view-home">
+    <h1 class="page-title">Research Sources</h1>
+    <p class="page-sub">Choose your topic to find sources for your report.</p>
+    <div class="steps" style="--tc:#1F5C8B;--tc-light:#D6E8F5;">
+      <div class="step current"><div class="step-num">1</div> Choose topic</div>
+      <div class="step-arrow"></div>
+      <div class="step"><div class="step-num">2</div> Choose your subject</div>
+      <div class="step-arrow"></div>
+      <div class="step"><div class="step-num">3</div> Find your sources</div>
+    </div>
+    <div class="topic-grid">
+      <div class="topic-card" style="--tc:#1F5C8B;--tc-light:#D6E8F5;" onclick="selectTopic('brands')">
+        <span class="tc-icon">🏪</span>
+        <div class="tc-label">Option 1</div>
+        <div class="tc-title">Global Brands</div>
+        <div class="tc-desc">Explore the problems caused by some of the world's biggest companies — from the environment to workers' rights.</div>
+        <div class="tc-choices">
+          <span class="tc-chip">McDonald's</span><span class="tc-chip">Coca-Cola</span><span class="tc-chip">Amazon</span><span class="tc-chip">Shein</span>
+        </div>
+        <div class="tc-cta">Get started →</div>
+      </div>
+      <div class="topic-card" style="--tc:#1A6B3C;--tc-light:#D4EDE1;" onclick="selectTopic('migration')">
+        <span class="tc-icon">🌍</span>
+        <div class="tc-label">Option 2</div>
+        <div class="tc-title">Why People Leave Their Home Country</div>
+        <div class="tc-desc">Explore the reasons why millions of people are forced to leave their homes and move to other countries.</div>
+        <div class="tc-choices">
+          <span class="tc-chip" style="background:#D4EDE1;color:#1A6B3C;border-color:#1A6B3C;">Palestine</span>
+          <span class="tc-chip" style="background:#D4EDE1;color:#1A6B3C;border-color:#1A6B3C;">Syria</span>
+          <span class="tc-chip" style="background:#D4EDE1;color:#1A6B3C;border-color:#1A6B3C;">Ukraine</span>
+          <span class="tc-chip" style="background:#D4EDE1;color:#1A6B3C;border-color:#1A6B3C;">The Philippines</span>
+        </div>
+        <div class="tc-cta" style="background:#1A6B3C;">Get started →</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIEW 2: SUBTOPIC -->
+  <div class="view" id="view-subtopic">
+    <div class="back-btn" onclick="goHome()">← Back to topics</div>
+    <h1 class="page-title" id="topic-title">Choose your subject</h1>
+    <p class="page-sub">Which one are you researching?</p>
+    <div class="subtopic-grid" id="subtopic-grid"></div>
+  </div>
+
+  <!-- VIEW 3: SOURCES -->
+  <div class="view" id="view-sources">
+    <div class="back-btn" id="back-to-subtopic" onclick="goBack()">← Back</div>
+    <div class="topic-banner" id="source-banner"></div>
+    <div class="sources-grid" id="sources-grid"></div>
+    <div class="reminder-box" id="reminder-box"></div>
+  </div>
+
+</main>
+
+<script>
+const data = {
+  brands: {
+    label:'Global Brands', color:'#1F5C8B', light:'#D6E8F5',
+    subtopics:[
+      {
+        name:"McDonald's", emoji:'🍔', issue:'Environmental impact & effects on local businesses',
+        sources:[
+          {
+            title:"How Sustainable is McDonald's?", org:'Impakter', type:'Article', year:'2023',
+            desc:"A detailed look at how McDonald's affects the environment through its food production, packaging, and global operations. The article also looks at what McDonald's is doing — or not doing — to improve.",
+            url:'https://impakter.com/how-sustainable-is-mcdonalds/',
+            cite:'Impakter. (2023). <em>How sustainable is McDonald\'s?</em> Impakter. https://impakter.com/how-sustainable-is-mcdonalds/',
+            hints:["Look for information about greenhouse gas emissions and packaging waste","Does the article discuss what McDonald's is trying to do to improve?","Think about who wrote this — what kind of organisation is Impakter?","Are there any perspectives from critics of McDonald's mentioned?"],
+            quiz:{
+              q:"You use information from this article in your report. Which is the correct APA7 in-text citation?",
+              opts:[
+                {t:"(How Sustainable is McDonald's?, 2023)", c:false, fb:"<strong>Not quite.</strong> In APA7 you use the <em>author's name</em> in the in-text citation, not the title of the article. Use the title only if there is no author at all."},
+                {t:"(Impakter, 2023)", c:true,  fb:"<strong>Correct! ✓</strong> The author is Impakter (the organisation), and the article was published in 2023. The format is: (Author, Year)."},
+                {t:"(2023, Impakter)", c:false, fb:"<strong>Not quite.</strong> In APA7 the author always comes first, then the year. The correct order is: (Author, Year)."},
+                {t:"(Impakter 2023)", c:false, fb:"<strong>Almost!</strong> You have the right information, but remember: there must be a comma between the author and the year — (Impakter, 2023)."}
+              ]
+            }
+          },
+          {
+            title:"Evaluating McDonald's Environmental and Social Impact", org:'Green Digest', type:'Article', year:'2025',
+            desc:"A detailed analysis of McDonald's impact on the environment and society, covering greenhouse gas emissions, health effects, worker conditions, and how the company scores against the UN's Sustainable Development Goals.",
+            url:"https://www.greendigest.co/p/mcdonalds-environmental-and-social-impact",
+            cite:"Green Digest. (2025). <em>Evaluating McDonald's environmental and social impact.</em> Green Digest. https://www.greendigest.co/p/mcdonalds-environmental-and-social-impact",
+            hints:["Look for how McDonald's is scored — does it have a positive or negative overall impact?","Does the article cover both health AND environmental issues, or mainly one?","Think about who Green Digest is — what kind of organisation are they and what might their purpose be?","Look for mentions of the UN Sustainable Development Goals — these could strengthen your analysis"],
+            quiz:{
+              q:"You use information from this Green Digest article. Which is the correct APA7 in-text citation?",
+              opts:[
+                {t:"(Green Digest, 2025)", c:true,  fb:"<strong>Correct! ✓</strong> Green Digest is the author (the organisation), and the article was published in 2025. Format: (Author, Year)."},
+                {t:"(Evaluating McDonald's, 2025)", c:false, fb:"<strong>Not quite.</strong> In APA7 you use the <em>author's name</em>, not the article title. The author here is Green Digest."},
+                {t:"(Green Digest, 2024)", c:false, fb:"<strong>Not quite.</strong> Always check the publication year carefully — this article was published in 2025, not 2024."},
+                {t:"(greendigest.co, 2025)", c:false, fb:"<strong>Not quite.</strong> In APA7 you use the organisation's name, not the web address. The author is Green Digest."}
+              ]
+            }
+          }
+        ]
+      },
+      {
+        name:'Coca-Cola', emoji:'🥤', issue:'Plastic pollution & health impacts',
+        sources:[
+          {
+            title:"Unbottling the Truth: Coca-Cola's Role in Plastic Pollution", org:'Greenpeace', type:'Article', year:'2023',
+            desc:"An investigation into how Coca-Cola contributes to plastic pollution around the world, and what the company is — or isn't — doing about it.",
+            url:'https://www.greenpeace.org/aotearoa/story/unbottling-the-truth-coca-colas-role-in-plastic-pollution/',
+            cite:"Greenpeace. (2023). <em>Unbottling the truth: Coca-Cola's role in plastic pollution.</em> Greenpeace. https://www.greenpeace.org/aotearoa/story/unbottling-the-truth-coca-colas-role-in-plastic-pollution/",
+            hints:["Look for information about how much plastic Coca-Cola produces each year","Does the article explain where this plastic ends up?","Think about bias: Greenpeace is an environmental campaign group — how might this affect the article?","Look for quotes or evidence from other organisations mentioned in the article"],
+            quiz:{
+              q:"You use a fact from this Greenpeace article. Which is the correct APA7 in-text citation?",
+              opts:[
+                {t:"(Greenpeace Aotearoa, 2023)", c:false, fb:"<strong>Not quite.</strong> The author listed for this article is simply 'Greenpeace' — not the regional branch name. Keep it as the main organisation name."},
+                {t:"(Unbottling the Truth, 2023)", c:false, fb:"<strong>Not quite.</strong> In APA7 you use the <em>author's name</em> in the in-text citation, not the article title. The author here is Greenpeace."},
+                {t:"(Greenpeace, 2023)", c:true,  fb:"<strong>Correct! ✓</strong> The author is the organisation Greenpeace, and the year is 2023. Format: (Author, Year)."},
+                {t:"(Greenpeace, 23)", c:false, fb:"<strong>Not quite.</strong> Always write the full four-digit year in APA7 — not a shortened version. So: (Greenpeace, 2023)."}
+              ]
+            }
+          },
+          {
+            title:'2023 Global Brand Audit Results', org:'Break Free From Plastic', type:'Report', year:'2024',
+            desc:"A report where thousands of volunteers around the world collected and counted plastic waste by brand. It identifies the world's biggest plastic polluters by name.",
+            url:'https://www.breakfreefromplastic.org/2024/02/07/bffp-movement-unveils-2023-global-brand-audit-results/',
+            cite:"Break Free From Plastic. (2024). <em>2023 global brand audit results.</em> Break Free From Plastic. https://www.breakfreefromplastic.org/2024/02/07/bffp-movement-unveils-2023-global-brand-audit-results/",
+            hints:["Look at which brands appear most often in the plastic waste data","The report covers many countries — think about which regions are most affected","Think about who created this report and why — what is this organisation's goal?","Note: the audit was done in 2023 but the report was published in 2024 — which year do you cite?"],
+            quiz:{
+              q:"This report was published in 2024 about data collected in 2023. Which is the correct APA7 in-text citation?",
+              opts:[
+                {t:"(BFFP, 2024)", c:false, fb:"<strong>Not quite.</strong> 'BFFP' is an abbreviation that you have not introduced in your text. In APA7, use the full name the first time: (Break Free From Plastic, 2024)."},
+                {t:"(Break Free From Plastic, 2023)", c:false, fb:"<strong>Not quite.</strong> APA7 uses the year the source was <em>published</em>, not the year the data was collected. This report was published in 2024, so use 2024."},
+                {t:"(Break Free From Plastic, 2024)", c:true,  fb:"<strong>Correct! ✓</strong> In APA7 you use the publication year (2024), even though the data was from 2023. Format: (Author, Year)."},
+                {t:"(Brand Audit, 2024)", c:false, fb:"<strong>Not quite.</strong> In APA7 you use the <em>author's name</em>, not a shortened version of the title. The author is Break Free From Plastic."}
+              ]
+            }
+          }
+        ]
+      },
+      {
+        name:'Amazon', emoji:'📦', issue:"Worker conditions & environmental footprint",
+        sources:[
+          {
+            title:"'Robots Are Treated Better': Amazon Workers Stage First-Ever Strike in the UK", org:'CNBC', type:'News article', year:'2023',
+            desc:"A news report about Amazon warehouse workers in the UK who went on strike to protest their pay and working conditions. Includes quotes from workers, union leaders, and Amazon's response.",
+            url:'https://www.cnbc.com/2023/01/25/amazon-workers-stage-first-ever-strike-in-the-uk-over-pay-working-conditions.html',
+            cite:"CNBC. (2023). <em>'Robots are treated better': Amazon workers stage first-ever strike in the UK.</em> CNBC. https://www.cnbc.com/2023/01/25/amazon-workers-stage-first-ever-strike-in-the-uk-over-pay-working-conditions.html",
+            hints:["What are the workers' main complaints about their pay and conditions?","Look for what Amazon says in response — do they agree or disagree?","Think about perspectives: who is speaking in this article — workers, Amazon, or unions?","Is this a recent source? Does currency (date) matter for your research question?"],
+            quiz:{
+              q:"You quote a worker's experience from this CNBC article. Which is the correct APA7 in-text citation?",
+              opts:[
+                {t:"(Amazon Strike, 2023)", c:false, fb:"<strong>Not quite.</strong> In APA7 you use the <em>author's name</em> in the citation, not a topic label or summary. The author here is CNBC."},
+                {t:"(cnbc.com, 2023)", c:false, fb:"<strong>Not quite.</strong> In APA7 you use the organisation's name, not a web address. The author is CNBC — not the URL."},
+                {t:"(CNBC News, 2023)", c:false, fb:"<strong>Almost!</strong> The organisation's name is just 'CNBC' — not 'CNBC News'. Always use the name as it appears on the source."},
+                {t:"(CNBC, 2023)", c:true,  fb:"<strong>Correct! ✓</strong> CNBC is the author (the news organisation), and the article was published in 2023. Format: (Author, Year)."}
+              ]
+            }
+          },
+          {
+            title:"Amazon's Emissions Rose in 2024 Amid Data Center Expansion", org:'Earth.org', type:'Article', year:'2025',
+            desc:"An article about how Amazon's carbon emissions grew in 2024 for the first time in three years, driven by the expansion of data centers and delivery operations — despite the company's pledge to reach net-zero by 2040.",
+            url:'https://earth.org/amazon-emissions-rose-in-2024-amid-expansion-of-energy-hungry-data-centers/',
+            cite:"Earth.org. (2025). <em>Amazon's emissions rose in 2024 amid data center expansion.</em> Earth.org. https://earth.org/amazon-emissions-rose-in-2024-amid-expansion-of-energy-hungry-data-centers/",
+            hints:["Look for what Amazon promised about its emissions — and what actually happened","Does the article explain what is causing Amazon's emissions to rise?","Think about who Earth.org is — what kind of organisation are they and what is their purpose?","Look for information about Amazon's net-zero pledge and whether the article thinks they will achieve it"],
+            quiz:{
+              q:"You use data from this Earth.org article about Amazon. Which is the correct APA7 in-text citation?",
+              opts:[
+                {t:"(Earth.org, 2024)", c:false, fb:"<strong>Not quite.</strong> The article was published in 2025, not 2024. Always check the publication year carefully."},
+                {t:"(Amazon, 2025)", c:false, fb:"<strong>Not quite.</strong> Amazon did not write this article — Earth.org did. Use the name of the organisation that published the source."},
+                {t:"(Earth.org, 2025)", c:true,  fb:"<strong>Correct! ✓</strong> Earth.org is the author (the organisation), and the article was published in 2025. Format: (Author, Year)."},
+                {t:"(Earth Organisation, 2025)", c:false, fb:"<strong>Not quite.</strong> The author's name is 'Earth.org' — that is how it appears on the website. Don't change or expand the name."}
+              ]
+            }
+          }
+        ]
+      },
+      {
+        name:'Shein', emoji:'👗', issue:'Worker rights & environmental damage from fast fashion',
+        sources:[
+          {
+            title:"The Truth Behind Your $12 Dress: Inside the Chinese Factories Fuelling Shein's Success", org:'BBC News', type:'News investigation', year:'2025',
+            desc:"A BBC investigation where reporters visited factories in China that make clothes for Shein. They spoke to workers about their daily conditions, pay, and working hours.",
+            url:'https://www.bbc.com/news/articles/c4ge028n7w3o',
+            cite:"Bicker, L. (2025). <em>The truth behind your $12 dress: Inside the Chinese factories fuelling Shein's success.</em> BBC News. https://www.bbc.com/news/articles/c4ge028n7w3o",
+            hints:["What do the factory workers say about their daily working hours and pay?","Look for what Shein says in response — do they agree or disagree with the findings?","Think about this source: BBC is a public broadcaster — does this make it more reliable?","Look for any mention of local laws being broken by the factories"],
+            quiz:{
+              q:"This article was written by journalist Laura Bicker. Which is the correct APA7 in-text citation?",
+              opts:[
+                {t:"(BBC News, 2025)", c:false, fb:"<strong>Not quite.</strong> This article has a named author — Laura Bicker. In APA7, when there is an individual author, you use their <em>last name</em>, not the organisation name."},
+                {t:"(Bicker, L., 2025)", c:false, fb:"<strong>Almost!</strong> In APA7, you only use initials in the <em>reference list</em> — not in the in-text citation. The in-text citation just uses the last name: (Bicker, 2025)."},
+                {t:"(Bicker, 2025)", c:true,  fb:"<strong>Correct! ✓</strong> The author is Laura Bicker, so you use her last name. APA7 in-text format: (Last Name, Year)."},
+                {t:"(The Truth Behind Your $12 Dress, 2025)", c:false, fb:"<strong>Not quite.</strong> In APA7 you use the <em>author's name</em>, not the article title. Because there is a named author (Bicker), use their name."}
+              ]
+            }
+          },
+          {
+            title:"Fast Fashion Giant Shein's Emissions Balloon in 2024", org:'Earth.org', type:'Article', year:'2024',
+            desc:"An article about Shein's growing carbon footprint, looking at how the fast fashion model creates environmental problems through production, shipping, and textile waste.",
+            url:'https://earth.org/fast-fashion-giant-sheins-emissions-balloon-in-2024/',
+            cite:"Earth.org. (2024). <em>Fast fashion giant Shein's emissions balloon in 2024.</em> Earth.org. https://earth.org/fast-fashion-giant-sheins-emissions-balloon-in-2024/",
+            hints:["Look for information about what types of emissions Shein's business produces","Does the article explain what Shein is promising to do in the future?","Think about who Earth.org is — what type of organisation are they?","Look for any comparisons that help explain the scale of Shein's environmental impact"],
+            quiz:{
+              q:"You reference data from this Earth.org article. Which is the correct APA7 in-text citation?",
+              opts:[
+                {t:"(Earth Organisation, 2024)", c:false, fb:"<strong>Not quite.</strong> The author's name is 'Earth.org' — that is how it appears on the website. Don't change or expand the name."},
+                {t:"(Shein Emissions, 2024)", c:false, fb:"<strong>Not quite.</strong> In APA7 you use the <em>author's name</em>, not a topic label or summary. The author is Earth.org."},
+                {t:"(Earth.org, 2024, p. 1)", c:false, fb:"<strong>Not quite.</strong> You only add a page number when quoting from a physical book or PDF with page numbers. Webpage articles don't have page numbers in APA7."},
+                {t:"(Earth.org, 2024)", c:true,  fb:"<strong>Correct! ✓</strong> Earth.org is the author (the organisation), and the article was published in 2024. Format: (Author, Year)."}
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  migration: {
+    label:'Why People Leave Their Home Country', color:'#1A6B3C', light:'#D4EDE1',
+    subtopics:[
+      {
+        name:'Palestine', emoji:'🌿', issue:'Conflict, displacement & the refugee crisis',
+        sources:[
+          {
+            title:'UNICEF in the State of Palestine', org:'UNICEF', type:'Organisation page', year:'n.d.',
+            desc:"UNICEF's information page about children and families in Palestine. It covers the humanitarian situation, the impact on education and health, and the scale of displacement.",
+            url:'https://www.unicef.org/sop/',
+            cite:"UNICEF. (n.d.). <em>UNICEF in the State of Palestine.</em> UNICEF. https://www.unicef.org/sop/",
+            hints:["Look for information about how many children and families have been displaced","Does the page explain what daily life is like for children in Palestine?","UNICEF is a UN agency — think about whether this makes it a reliable source","Look for information about what UNICEF is doing to help — this shows consequences"],
+            quiz:{
+              q:"You use information from this UNICEF page. Which is the correct APA7 in-text citation?",
+              opts:[
+                {t:"(UNICEF Palestine, n.d.)", c:false, fb:"<strong>Not quite.</strong> The author listed on this page is simply 'UNICEF' — not 'UNICEF Palestine'. Use the name as it appears on the source."},
+                {t:"(unicef.org, n.d.)", c:false, fb:"<strong>Not quite.</strong> In APA7 you use the organisation's name, not a web address. The author is UNICEF — not the URL."},
+                {t:"(UNICEF, 2024)", c:false, fb:"<strong>Not quite.</strong> This page does not show a clear publication date, so APA7 uses 'n.d.' (no date) instead of guessing a year."},
+                {t:"(UNICEF, n.d.)", c:true,  fb:"<strong>Correct! ✓</strong> UNICEF is the author, and there is no publication date shown, so we use 'n.d.' Format: (Author, n.d.)."}
+              ]
+            }
+          },
+          {
+            title:"What is UNRWA and Why is it Important for Palestinians?", org:'Al Jazeera', type:'News explainer', year:'2024',
+            desc:"An explainer article about UNRWA — the UN agency that supports Palestinian refugees — and why it matters for millions of people displaced from Palestine.",
+            url:'https://www.aljazeera.com/news/2024/2/1/what-is-unrwa-and-why-it-is-important-for-palestinians',
+            cite:"Al Jazeera. (2024). <em>What is UNRWA and why is it important for Palestinians?</em> Al Jazeera. https://www.aljazeera.com/news/2024/2/1/what-is-unrwa-and-why-it-is-important-for-palestinians",
+            hints:["Look for information about how many Palestinians are registered as refugees","What services does UNRWA provide — what does this tell you about people's needs?","Al Jazeera is a Middle Eastern news network — think about how this might shape its perspective","Look for information about where Palestinian refugees are currently living"],
+            quiz:{
+              q:"You quote information from this Al Jazeera article. Which is the correct APA7 in-text citation?",
+              opts:[
+                {t:"(Al Jazeera, 2024)", c:true,  fb:"<strong>Correct! ✓</strong> Al Jazeera is the author (the news organisation), and the article was published in 2024. Format: (Author, Year)."},
+                {t:"(Al-Jazeera, 2024)", c:false, fb:"<strong>Not quite.</strong> The organisation's official name does not use a hyphen — it is 'Al Jazeera'. Always use the name exactly as it appears on the source."},
+                {t:"(aljazeera.com, 2024)", c:false, fb:"<strong>Not quite.</strong> In APA7 you use the organisation's name, not the web address. The author is Al Jazeera."},
+                {t:"(Al Jazeera 2024)", c:false, fb:"<strong>Almost!</strong> You have the right information, but remember to add a comma between the author and the year: (Al Jazeera, 2024)."}
+              ]
+            }
+          }
+        ]
+      },
+      {
+        name:'Syria', emoji:'🕊️', issue:'Civil war, economic collapse & displacement',
+        sources:[
+          {
+            title:'Syria Emergency', org:'UNHCR — UN Refugee Agency', type:'Explainer page', year:'n.d.',
+            desc:"An overview of the Syrian refugee crisis from the UN Refugee Agency, including why people fled, where they went, and what life is like for Syrian refugees today.",
+            url:'https://www.unhcr.org/emergencies/syria-emergency',
+            cite:"UNHCR. (n.d.). <em>Syria emergency.</em> UNHCR. https://www.unhcr.org/emergencies/syria-emergency",
+            hints:["Look for information about the main reasons people left Syria","Does the source explain which countries received the most Syrian refugees?","UNHCR is the UN's refugee agency — does this make it a reliable source?","Look for information about what life is like for Syrians living in other countries"],
+            quiz:{
+              q:"You use information from this UNHCR page. Which is the correct APA7 in-text citation?",
+              opts:[
+                {t:"(UN Refugee Agency, n.d.)", c:false, fb:"<strong>Not quite.</strong> The organisation's official short name is 'UNHCR', not 'UN Refugee Agency'. Use the name as it appears at the top of the source."},
+                {t:"(UNHCR, n.d.)", c:true,  fb:"<strong>Correct! ✓</strong> UNHCR is the author (the organisation), and there is no publication date on the page, so we use 'n.d.' Format: (Author, n.d.)."},
+                {t:"(UNHCR, n.d., para. 3)", c:false, fb:"<strong>Not quite.</strong> In APA7, you only add a paragraph number when you are using a <em>direct quote</em> from a source with no page numbers. For paraphrased information, just use (UNHCR, n.d.)."},
+                {t:"(Syria Emergency, n.d.)", c:false, fb:"<strong>Not quite.</strong> In APA7 you use the <em>author's name</em>, not the title of the page. The author here is UNHCR."}
+              ]
+            }
+          },
+          {
+            title:'Syria: The Story of the Conflict', org:'BBC News', type:'News explainer', year:'n.d.',
+            desc:"A BBC explainer covering the origins of the conflict in Syria and how it has affected the lives of millions of people who were forced to flee their homes.",
+            url:'https://www.bbc.com/news/world-middle-east-26116868',
+            cite:"BBC News. (n.d.). <em>Syria: The story of the conflict.</em> BBC News. https://www.bbc.com/news/world-middle-east-26116868",
+            hints:["Look for the key events that caused people to start leaving Syria","Does the article explain who was involved in the conflict?","Think about this source: BBC is a public broadcaster — does this make it reliable?","Look for information about the scale of the crisis — how many people were affected?"],
+            quiz:{
+              q:"You use a fact from this BBC News explainer. Which is the correct APA7 in-text citation?",
+              opts:[
+                {t:"(BBC, n.d.)", c:false, fb:"<strong>Almost!</strong> The full name of the author is 'BBC News' — not just 'BBC'. Use the full name as it appears on the source."},
+                {t:"(Syria: The Story of the Conflict, n.d.)", c:false, fb:"<strong>Not quite.</strong> In APA7 you use the <em>author's name</em>, not the title. When there is no individual author, use the organisation name — BBC News."},
+                {t:"(BBC News, 2023)", c:false, fb:"<strong>Not quite.</strong> This BBC page is updated regularly and does not show a clear publication date. When there is no date, APA7 uses 'n.d.' instead."},
+                {t:"(BBC News, n.d.)", c:true,  fb:"<strong>Correct! ✓</strong> BBC News is the author, and there is no clear publication date, so we use 'n.d.' Format: (Author, n.d.)."}
+              ]
+            }
+          }
+        ]
+      },
+      {
+        name:'Ukraine', emoji:'🌻', issue:'War, displacement & refugee integration',
+        sources:[
+          {
+            title:'Ukraine Emergency', org:'UNHCR — UN Refugee Agency', type:'Explainer page', year:'n.d.',
+            desc:"UNHCR's overview of the Ukraine emergency, covering why people fled, where they went, and the challenges refugees face as they settle in new countries.",
+            url:'https://www.unhcr.org/emergencies/ukraine-emergency',
+            cite:"UNHCR. (n.d.). <em>Ukraine emergency.</em> UNHCR. https://www.unhcr.org/emergencies/ukraine-emergency",
+            hints:["Look for information about how many people left Ukraine and which countries they went to","Does the source explain what challenges Ukrainian refugees face in host countries?","UNHCR is the UN's refugee agency — think about why they publish this information","Look for information about what kinds of support are available to Ukrainian refugees"],
+            quiz:{
+              q:"You use data from this UNHCR Ukraine page. Which is the correct APA7 in-text citation?",
+              opts:[
+                {t:"(UNHCR Ukraine, n.d.)", c:false, fb:"<strong>Not quite.</strong> The author is 'UNHCR' — you do not need to add the country name to the in-text citation. The country is already clear from your sentence."},
+                {t:"(United Nations, n.d.)", c:false, fb:"<strong>Not quite.</strong> UNHCR is a separate agency from the United Nations generally. Use the specific organisation name — UNHCR — not the broader 'United Nations'."},
+                {t:"(UNHCR, n.d.)", c:true,  fb:"<strong>Correct! ✓</strong> UNHCR is the author, and there is no publication date on the page, so we use 'n.d.' Format: (Author, n.d.)."},
+                {t:"(UNHCR, 2022)", c:false, fb:"<strong>Not quite.</strong> This page does not have a clear publication year. When there is no date, APA7 uses 'n.d.' — don't guess or estimate a year."}
+              ]
+            }
+          },
+          {
+            title:'Ukraine: What is Happening and Why Did Russia Invade?', org:'BBC News', type:'News explainer', year:'n.d.',
+            desc:"A BBC explainer about the Russian invasion of Ukraine, covering what happened and how the war has affected the everyday lives of millions of Ukrainian people.",
+            url:'https://www.bbc.com/news/world-europe-56720589',
+            cite:"BBC News. (n.d.). <em>Ukraine: What is happening and why did Russia invade?</em> BBC News. https://www.bbc.com/news/world-europe-56720589",
+            hints:["Look for the key events that caused people to start leaving Ukraine","Does the article explain how the war affected everyday life — school, work, safety?","Think about this source: is BBC a reliable source for news about an ongoing conflict?","Look for any perspectives from Ukrainian people about why they chose to leave"],
+            quiz:{
+              q:"You reference this BBC News article about Ukraine. Which is the correct APA7 in-text citation?",
+              opts:[
+                {t:"(BBC News, n.d.)", c:true,  fb:"<strong>Correct! ✓</strong> BBC News is the author, and there is no clear publication date on the page, so we use 'n.d.' Format: (Author, n.d.)."},
+                {t:"(Ukraine War, n.d.)", c:false, fb:"<strong>Not quite.</strong> In APA7 you use the <em>author's name</em>, not a topic label. The author here is BBC News."},
+                {t:"(BBC, n.d.)", c:false, fb:"<strong>Almost!</strong> The full author name is 'BBC News' — not just 'BBC'. Use the name exactly as it appears on the source."},
+                {t:"(BBC News, 2022)", c:false, fb:"<strong>Not quite.</strong> This BBC page is updated regularly and doesn't show a fixed publication year. Use 'n.d.' when there is no clear date."}
+              ]
+            }
+          }
+        ]
+      },
+      {
+        name:'The Philippines', emoji:'🌺', issue:'Economic migration & climate-driven displacement',
+        sources:[
+          {
+            title:'Migration in the Philippines', org:'International Organization for Migration (IOM)', type:'Information page', year:'n.d.',
+            desc:"An overview from the International Organization for Migration about why Filipinos migrate to other countries, covering economic, family, and environmental reasons.",
+            url:'https://philippines.iom.int/',
+            cite:"IOM Philippines. (n.d.). <em>Migration in the Philippines.</em> International Organization for Migration. https://philippines.iom.int/",
+            hints:["Look for information about the main reasons Filipinos choose to leave","Does the source explain where most Filipino migrants go and what jobs they do?","IOM is an international organisation — think about why they track migration data","Look for information about how migration affects the families left behind"],
+            quiz:{
+              q:"You use information from this IOM Philippines page. Which is the correct APA7 in-text citation?",
+              opts:[
+                {t:"(IOM, n.d.)", c:false, fb:"<strong>Not quite.</strong> There are many IOM offices around the world. The author listed for this page is specifically 'IOM Philippines', so include the full name to be precise."},
+                {t:"(International Organization for Migration, n.d.)", c:false, fb:"<strong>Not quite.</strong> The author for this specific page is listed as 'IOM Philippines' — the Philippine office. Use that name rather than the full global name."},
+                {t:"(IOM Philippines, 2023)", c:false, fb:"<strong>Not quite.</strong> This page does not show a clear publication year. When there is no date, APA7 uses 'n.d.' — don't guess a year."},
+                {t:"(IOM Philippines, n.d.)", c:true,  fb:"<strong>Correct! ✓</strong> IOM Philippines is the author (the specific office), and there is no publication date, so we use 'n.d.' Format: (Author, n.d.)."}
+              ]
+            }
+          },
+          {
+            title:'Climate Change and Environment in the Philippines', org:'UNICEF Philippines', type:'Information page', year:'n.d.',
+            desc:"UNICEF's overview of how climate change and natural disasters affect people in the Philippines, and how these events can force families and communities to move.",
+            url:'https://www.unicef.org/philippines/climate-change-and-environment',
+            cite:"UNICEF Philippines. (n.d.). <em>Climate change and environment in the Philippines.</em> UNICEF. https://www.unicef.org/philippines/climate-change-and-environment",
+            hints:["Look for information about what types of natural disasters affect the Philippines","Does the source explain how climate events can force people to move or migrate?","UNICEF focuses on children — how does this shape the perspective in the article?","Look for information about what is being done to help affected communities"],
+            quiz:{
+              q:"You use a fact from this UNICEF Philippines page. Which is the correct APA7 in-text citation?",
+              opts:[
+                {t:"(UNICEF, n.d.)", c:false, fb:"<strong>Almost!</strong> The author for this specific page is 'UNICEF Philippines' — the Philippine office. Including the country name helps tell it apart from other UNICEF pages you might use."},
+                {t:"(UNICEF Philippines, n.d.)", c:true,  fb:"<strong>Correct! ✓</strong> UNICEF Philippines is the specific author listed for this page, and there is no date, so we use 'n.d.' Format: (Author, n.d.)."},
+                {t:"(unicef.org/philippines, n.d.)", c:false, fb:"<strong>Not quite.</strong> In APA7 you use the organisation's name, not the URL. The author is UNICEF Philippines."},
+                {t:"(UNICEF Philippines, 2024)", c:false, fb:"<strong>Not quite.</strong> This page does not have a clear publication year. When there is no date, use 'n.d.' — don't estimate or guess a year."}
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  }
+};
+
+let currentTopic=null, currentSubtopic=null;
+
+function setTC(color,light){
+  document.documentElement.style.setProperty('--tc',color);
+  document.documentElement.style.setProperty('--tc-light',light);
+}
+function showView(id){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('view-'+id).classList.add('active');
+}
+function updateBreadcrumb(){
+  const bc=document.getElementById('breadcrumb');
+  let html=`<span class="crumb" onclick="goHome()">Home</span>`;
+  if(currentTopic){
+    const t=data[currentTopic];
+    html+=`<span class="sep">›</span><span class="crumb ${!currentSubtopic&&currentSubtopic!==0?'active':''}" onclick="goBack()">${t.label}</span>`;
+  }
+  if(currentSubtopic!==null&&currentTopic){
+    const s=data[currentTopic].subtopics[currentSubtopic];
+    html+=`<span class="sep">›</span><span class="crumb active">${s.name}</span>`;
+  }
+  bc.innerHTML=html;
+}
+
+function selectTopic(topicId){
+  currentTopic=topicId; currentSubtopic=null;
+  const t=data[topicId];
+  setTC(t.color,t.light);
+  document.getElementById('topic-title').textContent=t.label;
+  const grid=document.getElementById('subtopic-grid');
+  grid.innerHTML=t.subtopics.map((s,i)=>`
+    <div class="subtopic-card" onclick="selectSubtopic(${i})">
+      <span class="sc-emoji">${s.emoji}</span>
+      <div class="sc-name">${s.name}</div>
+      <div class="sc-issue">${s.issue}</div>
+      <div class="sc-badge">2 sources →</div>
+    </div>`).join('');
+  updateBreadcrumb(); showView('subtopic'); window.scrollTo(0,0);
+}
+
+function selectSubtopic(idx){
+  currentSubtopic=idx;
+  const t=data[currentTopic], s=t.subtopics[idx];
+  document.getElementById('source-banner').innerHTML=`
+    <div class="tb-emoji">${s.emoji}</div>
+    <div><div class="tb-name">${s.name}</div><div class="tb-issue">${s.issue}</div></div>`;
+  document.getElementById('back-to-subtopic').textContent=`← Back to ${t.label}`;
+  const grid=document.getElementById('sources-grid');
+  grid.innerHTML=s.sources.map((src,i)=>`
+    <div class="source-card">
+      <div class="source-card-header">
+        <div class="source-num">Source ${i+1} of 2</div>
+        <div class="source-title">${src.title}</div>
+        <div class="source-meta">
+          <span class="source-badge">${src.org}</span>
+          <span class="source-badge">${src.type}</span>
+          <span class="source-badge">${src.year}</span>
+        </div>
+      </div>
+      <div class="source-card-body">
+        <p class="source-desc">${src.desc}</p>
+        <div class="citation-box">
+          <div class="citation-label">📝 Reference list citation (APA7)</div>
+          <div class="citation-text">${src.cite}</div>
+        </div>
+        <div class="hints-label">🔍 What to look for in this source</div>
+        <ul class="hint-list">
+          ${src.hints.map(h=>`<li><span class="hint-dot"></span>${h}</li>`).join('')}
+        </ul>
+        <a class="open-btn" href="${src.url}" target="_blank" rel="noopener">Open source ↗</a>
+        <div class="quiz-section">
+          <div class="quiz-q"><span class="quiz-icon">🎯</span>${src.quiz.q}</div>
+          <div class="quiz-options" id="quiz-${currentTopic}-${idx}-${i}">
+            ${src.quiz.opts.map((o,j)=>`
+              <button class="quiz-btn" onclick="checkAnswer('${currentTopic}',${idx},${i},${j})">
+                <strong>${String.fromCharCode(65+j)}.</strong> ${o.t}
+              </button>`).join('')}
+          </div>
+          <div class="quiz-feedback" id="fb-${currentTopic}-${idx}-${i}"></div>
+          <button class="quiz-reset" id="reset-${currentTopic}-${idx}-${i}" onclick="resetQuiz('${currentTopic}',${idx},${i})">↩ Try again</button>
+        </div>
+      </div>
+    </div>`).join('');
+  document.getElementById('reminder-box').innerHTML=`
+    <h3>📋 Before you write — remember to:</h3>
+    <ul>
+      <li>Read the source carefully before taking notes</li>
+      <li>Write notes in your own words — do not copy and paste</li>
+      <li>Add an in-text citation every time you use information from a source</li>
+      <li>Copy the reference list citation above into your bibliography section</li>
+      <li>Think: who wrote this? Why? Is it reliable?</li>
+    </ul>`;
+  updateBreadcrumb(); showView('sources'); window.scrollTo(0,0);
+}
+
+function checkAnswer(topicId, subtopicIdx, sourceIdx, choiceIdx){
+  const src=data[topicId].subtopics[subtopicIdx].sources[sourceIdx];
+  const opts=src.quiz.opts;
+  const qId=`${topicId}-${subtopicIdx}-${sourceIdx}`;
+  const btns=document.querySelectorAll(`#quiz-${qId} .quiz-btn`);
+  const fb=document.getElementById(`fb-${qId}`);
+  const reset=document.getElementById(`reset-${qId}`);
+  const chosen=opts[choiceIdx];
+  btns.forEach(b=>b.disabled=true);
+  btns[choiceIdx].classList.add(chosen.c?'correct':'wrong');
+  if(!chosen.c){
+    // reveal correct
+    opts.forEach((o,j)=>{ if(o.c) btns[j].classList.add('revealed'); });
+  }
+  fb.innerHTML=chosen.fb;
+  fb.className='quiz-feedback show '+(chosen.c?'correct-fb':'wrong-fb');
+  reset.classList.add('show');
+}
+
+function resetQuiz(topicId, subtopicIdx, sourceIdx){
+  const qId=`${topicId}-${subtopicIdx}-${sourceIdx}`;
+  const btns=document.querySelectorAll(`#quiz-${qId} .quiz-btn`);
+  const fb=document.getElementById(`fb-${qId}`);
+  const reset=document.getElementById(`reset-${qId}`);
+  btns.forEach(b=>{ b.disabled=false; b.className='quiz-btn'; });
+  fb.className='quiz-feedback';
+  fb.innerHTML='';
+  reset.classList.remove('show');
+}
+
+function goBack(){
+  if(currentSubtopic!==null){
+    currentSubtopic=null; updateBreadcrumb(); showView('subtopic'); window.scrollTo(0,0);
+  } else { goHome(); }
+}
+function goHome(){
+  currentTopic=null; currentSubtopic=null;
+  setTC('#1F5C8B','#D6E8F5'); updateBreadcrumb(); showView('home'); window.scrollTo(0,0);
+}
+</script>
+</body>
+</html>
